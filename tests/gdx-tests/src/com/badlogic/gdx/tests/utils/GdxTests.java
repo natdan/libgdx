@@ -43,6 +43,7 @@ import com.badlogic.gdx.tests.extensions.ControllersTest;
 import com.badlogic.gdx.tests.extensions.FreeTypeAtlasTest;
 import com.badlogic.gdx.tests.extensions.FreeTypeDisposeTest;
 import com.badlogic.gdx.tests.extensions.FreeTypeFontLoaderTest;
+import com.badlogic.gdx.tests.extensions.FreeTypeMetricsTest;
 import com.badlogic.gdx.tests.extensions.FreeTypeIncrementalTest;
 import com.badlogic.gdx.tests.extensions.FreeTypePackTest;
 import com.badlogic.gdx.tests.extensions.FreeTypeTest;
@@ -107,6 +108,7 @@ public class GdxTests {
 		BufferUtilsTest.class,
 		BulletTestCollection.class,
 		CollectionsTest.class,
+		ColorTest.class,
 		ContainerTest.class,
 		CpuSpriteBatchTest.class,
 		CullTest.class,
@@ -131,6 +133,7 @@ public class GdxTests {
 		ControllersTest.class,
 		Gdx2DTest.class,
 		GestureDetectorTest.class,
+		GLES30Test.class,
 		GLProfilerErrorTest.class,
 		GroupCullingTest.class,
 		GroupFadeTest.class,
@@ -246,6 +249,7 @@ public class GdxTests {
 		YDownTest.class,
 		FreeTypeFontLoaderTest.class,
 		FreeTypeDisposeTest.class,
+		FreeTypeMetricsTest.class,
 		FreeTypeIncrementalTest.class,
 		FreeTypePackTest.class,
 		FreeTypeAtlasTest.class,
