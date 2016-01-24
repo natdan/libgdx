@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -119,7 +119,7 @@ public class JoglNewtInput implements JoglInput, MouseListener, KeyListener {
 		throw new UnsupportedOperationException("getTextInput not supported by JoglInput, rather use JoglAWTInput");
 	}
 
-	
+
 	public void getPlaceholderTextInput (final TextInputListener listener, final String title, final String placeholder) {
 		throw new UnsupportedOperationException("getPlaceholderTextInput not supported by JoglInput, rather use JoglAWTInput");
 	}
@@ -395,7 +395,7 @@ public class JoglNewtInput implements JoglInput, MouseListener, KeyListener {
 			keyEvents.add(event);
 			keys.add(event.keyCode);
 			if(e.isPrintableKey()) {
-				event = usedKeyEvents.obtain();		
+				event = usedKeyEvents.obtain();
 				event.keyChar = e.getKeyChar();;
 				event.keyCode = translateKeyCode(e.getKeyCode());
 				event.type = KeyEvent.KEY_TYPED;
@@ -403,14 +403,14 @@ public class JoglNewtInput implements JoglInput, MouseListener, KeyListener {
 				keyEvents.add(event);
 				keys.add(event.keyCode);
 			}
-		}		
+		}
 	}
 
 	@Override
 	public void keyReleased (com.jogamp.newt.event.KeyEvent e) {
 		synchronized (this) {
 			if(e.isAutoRepeat()&&e.isPrintableKey()) {
-				KeyEvent event = usedKeyEvents.obtain();		
+				KeyEvent event = usedKeyEvents.obtain();
 				event.keyChar = e.getKeyChar();;
 				event.keyCode = translateKeyCode(e.getKeyCode());
 				event.type = KeyEvent.KEY_TYPED;
@@ -419,7 +419,7 @@ public class JoglNewtInput implements JoglInput, MouseListener, KeyListener {
 				keys.remove(event.keyCode);
 			}
 			if(!e.isAutoRepeat()) {
-				KeyEvent event = usedKeyEvents.obtain();		
+				KeyEvent event = usedKeyEvents.obtain();
 				event.keyChar = 0;
 				event.keyCode = translateKeyCode(e.getKeyCode());
 				event.type = KeyEvent.KEY_UP;
@@ -643,7 +643,7 @@ public class JoglNewtInput implements JoglInput, MouseListener, KeyListener {
 	@Override
 	public void getRotationMatrix (float[] matrix) {
 	}
-	
+
 	@Override
 	public boolean isKeyJustPressed(int key) {
 		// TODO Auto-generated method stub
@@ -655,9 +655,27 @@ public class JoglNewtInput implements JoglInput, MouseListener, KeyListener {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
 	public boolean isCatchMenuKey () {
 		return false;
+	}
+
+	@Override
+	public float getGyroscopeX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getGyroscopeY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getGyroscopeZ() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

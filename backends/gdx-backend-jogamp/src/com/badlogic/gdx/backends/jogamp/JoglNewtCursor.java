@@ -11,11 +11,11 @@ import com.jogamp.newt.Display.PointerIcon;
 import com.jogamp.newt.Window;
 
 public class JoglNewtCursor implements Cursor {
-	
+
 	private Window window;
-	
+
 	private PointerIcon internalJoglNewtCursor;
-	
+
 	public JoglNewtCursor(Pixmap pixmap, int xHotspot, int yHotspot, Window window) {
 		super();
 		this.window = window;
@@ -49,10 +49,13 @@ public class JoglNewtCursor implements Cursor {
         PixelRectangle.GenericPixelRect rec = new PixelRectangle.GenericPixelRect(pixFormat, size, 0, true, pixmap.getPixels());
 		internalJoglNewtCursor = window.getScreen().getDisplay().createPointerIcon(rec, xHotspot, yHotspot);
 	}
-	
-	@Override
+
 	public void setSystemCursor() {
 		window.setPointerIcon(internalJoglNewtCursor);
 	}
 
+	@Override
+	public void dispose() {
+		internalJoglNewtCursor.destroy();
+	}
 }
