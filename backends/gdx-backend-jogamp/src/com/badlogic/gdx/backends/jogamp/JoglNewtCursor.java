@@ -1,5 +1,7 @@
 package com.badlogic.gdx.backends.jogamp;
 
+import java.nio.ByteBuffer;
+
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -30,23 +32,21 @@ public class JoglNewtCursor implements Cursor {
 		PixelFormat pixFormat = null;
         switch(pixmap.getFormat()) {
         case Alpha:
-        	break;
         case Intensity:
-        	break;
         case LuminanceAlpha:
-        	break;
         case RGB565:
-        	break;
+        case RGBA4444:
+        	throw new GdxRuntimeException("invalid cursor pixmap format: " + pixmap.getFormat());
         case RGB888:
         	pixFormat = PixelFormat.RGB888;
-        	break;
-        case RGBA4444:
         	break;
         case RGBA8888:
         	pixFormat = PixelFormat.RGBA8888;
         	break;
         }
-        PixelRectangle.GenericPixelRect rec = new PixelRectangle.GenericPixelRect(pixFormat, size, 0, true, pixmap.getPixels());
+
+    final ByteBuffer pixels = pixmap.getPixels();
+    PixelRectangle.GenericPixelRect rec = new PixelRectangle.GenericPixelRect(pixFormat, size, 0, false, pixels);
 		internalJoglNewtCursor = window.getScreen().getDisplay().createPointerIcon(rec, xHotspot, yHotspot);
 	}
 

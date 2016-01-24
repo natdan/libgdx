@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,11 +30,11 @@ public class JoglNewtApplicationConfiguration extends JoglApplicationConfigurati
 	public JoglNewtApplicationConfiguration() {
 		super();
 	}
-	
+
 	public JoglNewtApplicationConfiguration(final String title, final int width, final int height) {
 		super(title, width, height);
 	}
-	
+
 	@Override
 	public DisplayMode[] getDisplayModes() {
         Display display = NewtFactory.createDisplay(null);
@@ -44,23 +44,23 @@ public class JoglNewtApplicationConfiguration extends JoglApplicationConfigurati
 		DisplayMode[] displayModes = new DisplayMode[screenModes.size()];
 		for (int modeIndex = 0 ; modeIndex < displayModes.length ; modeIndex++) {
 			MonitorMode mode = screenModes.get(modeIndex);
-			displayModes[modeIndex] = new JoglNewtDisplayMode(mode.getRotatedWidth(), mode.getRotatedHeight(), (int) mode.getRefreshRate(), mode.getSurfaceSize().getBitsPerPixel(), mode);
+			displayModes[modeIndex] = JoglNewtDisplayMode.from(mode);
 		}
 		screen.removeReference();
 		return displayModes;
 	}
-	
+
 	@Override
 	public JoglNewtDisplayMode getDesktopDisplayMode () {
 		Display display = NewtFactory.createDisplay(null);
         Screen screen = NewtFactory.createScreen(display,0);
         screen.addReference();
         MonitorMode mode = screen.getPrimaryMonitor().getCurrentMode();
-        JoglNewtDisplayMode desktopMode = new JoglNewtDisplayMode(mode.getRotatedWidth(), mode.getRotatedHeight(), (int) mode.getRefreshRate(), mode.getSurfaceSize().getBitsPerPixel(), mode);
+        JoglNewtDisplayMode desktopMode = JoglNewtDisplayMode.from(mode);
         screen.removeReference();
         return desktopMode;
 	}
-	
+
 	@Override
 	public float getScreenResolution() {
 		Display display = NewtFactory.createDisplay(null);

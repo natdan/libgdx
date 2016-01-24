@@ -16,8 +16,6 @@
 
 package com.badlogic.gdx.backends.jogamp;
 
-import java.util.List;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -25,11 +23,6 @@ import com.badlogic.gdx.backends.jogamp.audio.OpenALAudio;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.jogamp.newt.Display;
-import com.jogamp.newt.MonitorDevice;
-import com.jogamp.newt.MonitorMode;
-import com.jogamp.newt.NewtFactory;
-import com.jogamp.newt.Screen;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -96,6 +89,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		caps.setDoubleBuffered(true);
 
 		canvas = createCanvas(caps);
+
 		//canvas.setBackground(Color.BLACK);
 		canvas.addGLEventListener(this);
 

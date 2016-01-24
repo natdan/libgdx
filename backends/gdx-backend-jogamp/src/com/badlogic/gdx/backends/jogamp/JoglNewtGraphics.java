@@ -16,6 +16,7 @@
 
 package com.badlogic.gdx.backends.jogamp;
 
+import java.awt.PointerInfo;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -24,16 +25,19 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.jogamp.nativewindow.util.Dimension;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.MonitorDevice;
 import com.jogamp.newt.MonitorMode;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
 import com.jogamp.newt.Window;
+import com.jogamp.newt.event.MouseEvent.PointerClass;
+import com.jogamp.newt.event.MouseEvent.PointerType;
+import com.jogamp.newt.event.WindowListener;
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.newt.util.MonitorModeUtil;
 import com.jogamp.opengl.GLCapabilities;
+
+import jogamp.newt.PointerIconImpl;
 
 /** Implements the {@link Graphics} interface with Jogl.
  *
@@ -47,9 +51,13 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 
 	public JoglNewtGraphics (ApplicationListener listener, JoglNewtApplicationConfiguration config) {
 		initialize(listener, config);
-		getCanvas().setFullscreen(config.fullscreen);
-		getCanvas().setUndecorated(config.fullscreen);
 		getCanvas().getScreen().addReference();
+		if (config.fullscreen) {
+			setFullscreenMode(getDisplayMode(getMonitor()));
+		} else {
+			setWindowedMode(config.width, config.height);
+		}
+		setTitle(config.title);
 		desktopMode = config.getDesktopDisplayMode();
 	}
 
@@ -124,7 +132,7 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 	@Override
 	public Monitor getMonitor() {
 		final Window window = getCanvas();
-		if (canvas == null) return getPrimaryMonitor();
+		if (window == null) return getPrimaryMonitor();
 		return JoglNewtMonitor.from(window.getMainMonitor());
 	}
 
@@ -163,7 +171,7 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 			throw new IllegalArgumentException("incompatible monitor type: " + monitor.getClass());
 		}
 
-		return createDisplayModeFrom(((JoglNewtMonitor) monitor).device.getCurrentMode());
+		return JoglNewtDisplayMode.from(((JoglNewtMonitor) monitor).device.getCurrentMode());
 	}
 
 	@Override
@@ -176,7 +184,7 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 		final List<MonitorMode> monitorModes = joglMonitor.device.getSupportedModes();
 		final DisplayMode[] displayModes = new DisplayMode[monitorModes.size()];
 		for (int i = 0; i < displayModes.length; i++) {
-			displayModes[i] = createDisplayModeFrom(monitorModes.get(i));
+			displayModes[i] = JoglNewtDisplayMode.from(monitorModes.get(i));
 		}
 
 		return displayModes;
@@ -184,62 +192,77 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 
 	@Override
 	public boolean setFullscreenMode(DisplayMode displayMode) {
-		return setDisplayMode(displayMode, true);
+		return setFullscreenDisplayMode(displayMode);
 	}
 
 	@Override
 	public boolean setWindowedMode(int width, int height) {
-		if (getWidth() == width && getHeight() == height && !getCanvas().isFullscreen()) {
-			return true;
-		}
-
-		return setDisplayMode(width, height, false);
+		return setWindowedDisplayMode(width, height, config.x, config.y);
 	}
 
 	@Override
 	public void setSystemCursor(SystemCursor systemCursor) {
-		// FIXME: ????
+		// TODO ??
+		getCanvas().setPointerIcon(null);
 	}
 
-	private DisplayMode createDisplayModeFrom(MonitorMode monitorMode) {
-		return new JoglNewtDisplayMode(monitorMode.getRotatedWidth(), monitorMode.getRotatedHeight(),
-				Math.round (monitorMode.getRefreshRate()), monitorMode.getSurfaceSize().getBitsPerPixel(), monitorMode);
+	public void setResizable(boolean resizable) {
+		getCanvas().setResizable(resizable);
 	}
 
-	private boolean setDisplayMode (DisplayMode displayMode, boolean fullscreen) {
+	public void setUndecorated(boolean undecorated) {
+		getCanvas().setUndecorated(undecorated);
+	}
+
+	public void setPosition(int x, int y) {
+		getCanvas().setPosition(x, y);
+	}
+
+	public void addWindowListener(WindowListener listener) {
+		getCanvas().addWindowListener(listener);
+	}
+
+	public void removeWindowListener(WindowListener listener) {
+		getCanvas().removeWindowListener(listener);
+	}
+
+	public void setVisible(boolean visible) {
+		getCanvas().setVisible(visible);
+	}
+
+	private int getMonitorWidth () {
+		final MonitorDevice device = ((JoglNewtMonitor)getMonitor()).device;
+		return device.getViewport().getWidth();
+	}
+
+	private int getMonitorHeight () {
+		final MonitorDevice device = ((JoglNewtMonitor)getMonitor()).device;
+		return device.getViewport().getHeight();
+	}
+
+	private boolean setFullscreenDisplayMode (DisplayMode displayMode) {
 		MonitorMode screenMode = ((JoglNewtDisplayMode)displayMode).mode;
-
-		getCanvas().setUndecorated(fullscreen);
-		getCanvas().setFullscreen(fullscreen);
 		getCanvas().getMainMonitor().setCurrentMode(screenMode);
+		getCanvas().setFullscreen(true);
+		getCanvas().setPosition(0, 0);
+		getCanvas().setSize(displayMode.width, displayMode.height);
+		getCanvas().setUndecorated(true);
 		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, displayMode.width, displayMode.height);
-		config.width = displayMode.width;
-		config.height = displayMode.height;
 
 		return true;
 	}
 
-	private boolean setDisplayMode (int width, int height, boolean fullscreen) {
-		if (width == getCanvas().getWidth() && height == getCanvas().getHeight() && getCanvas().isFullscreen() == fullscreen) {
-			return true;
+	private boolean setWindowedDisplayMode (int width, int height, int x, int y) {
+		getCanvas().setFullscreen(false);
+		getCanvas().setSize(width, height);
+		if (x < 0 || y < 0) {
+			int newX = (getMonitorWidth() - width) / 2;
+		  int newY = (getMonitorHeight() - height) / 2;
+		  getCanvas().setPosition(newX, newY);
+		} else {
+			getCanvas().setPosition(x, y);
 		}
-		MonitorMode targetDisplayMode = null;
-		final MonitorDevice monitor = getCanvas().getMainMonitor();
-        List<MonitorMode> monitorModes = monitor.getSupportedModes();
-		Dimension dimension = new Dimension(width,height);
-		monitorModes = MonitorModeUtil.filterByResolution(monitorModes, dimension);
-		monitorModes = MonitorModeUtil.filterByRate(monitorModes, getCanvas().getMainMonitor().getCurrentMode().getRefreshRate());
-		monitorModes = MonitorModeUtil.getHighestAvailableRate(monitorModes);
-		if (monitorModes == null || monitorModes.isEmpty()) {
-			return false;
-		}
-		targetDisplayMode = monitorModes.get(0);
-		getCanvas().setUndecorated(fullscreen);
-		getCanvas().setFullscreen(fullscreen);
-		monitor.setCurrentMode(targetDisplayMode);
-		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, targetDisplayMode.getRotatedWidth(), targetDisplayMode.getRotatedHeight());
-		config.width = targetDisplayMode.getRotatedWidth();
-		config.height = targetDisplayMode.getRotatedHeight();
+		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, width, height);
 		return true;
 	}
 
@@ -254,6 +277,11 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 		static JoglNewtDisplayMode from(MonitorMode mode) {
 			return new JoglNewtDisplayMode(mode.getRotatedWidth(), mode.getRotatedHeight(), Math.round(mode.getRefreshRate()),
 					mode.getSurfaceSize().getBitsPerPixel(), mode);
+		}
+
+		@Override
+		public String toString() {
+			return super.toString() + " | NEWT MonitorMode: " + mode.toString();
 		}
 	}
 
