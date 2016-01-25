@@ -16,7 +16,6 @@
 
 package com.badlogic.gdx.backends.jogamp;
 
-import java.awt.PointerInfo;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -25,19 +24,16 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.jogamp.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.MonitorDevice;
 import com.jogamp.newt.MonitorMode;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
 import com.jogamp.newt.Window;
-import com.jogamp.newt.event.MouseEvent.PointerClass;
-import com.jogamp.newt.event.MouseEvent.PointerType;
 import com.jogamp.newt.event.WindowListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLCapabilities;
-
-import jogamp.newt.PointerIconImpl;
 
 /** Implements the {@link Graphics} interface with Jogl.
  *
@@ -62,7 +58,9 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 	}
 
 	protected GLWindow createCanvas(final GLCapabilities caps) {
-		return GLWindow.create(caps);
+		final GLWindow glwin = GLWindow.create(caps);
+		glwin.setDefaultCloseOperation(WindowClosingMode.DO_NOTHING_ON_CLOSE);
+		return glwin;
 	}
 
 	GLWindow getCanvas () {
@@ -96,8 +94,10 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 
 	@Override
 	public void destroy () {
+		getCanvas().setVisible(false);
+		final Screen screen = getCanvas().getScreen();
 		super.destroy();
-		getCanvas().setFullscreen(false);
+		screen.removeReference();
 	}
 
 	@Override
@@ -253,6 +253,7 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 	}
 
 	private boolean setWindowedDisplayMode (int width, int height, int x, int y) {
+		super.pause();
 		getCanvas().setFullscreen(false);
 		getCanvas().setSize(width, height);
 		if (x < 0 || y < 0) {
@@ -263,6 +264,7 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 			getCanvas().setPosition(x, y);
 		}
 		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, width, height);
+		super.resume();
 		return true;
 	}
 

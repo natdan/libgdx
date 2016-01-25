@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,7 +69,7 @@ public abstract class JoglApplicationBase implements Application {
 		Gdx.net = getNet();
 		graphics.create();
 	}
-	
+
 	/** When true, <code>Runtime.getRuntime().halt(0);</code> is used when the JVM shuts down. This prevents Swing shutdown hooks
 	 * from causing a deadlock and keeping the JVM alive indefinitely. Default is true. */
 	public void setHaltOnShutdown (boolean halt) {
@@ -88,9 +88,9 @@ public abstract class JoglApplicationBase implements Application {
 	}
 
 	protected abstract JoglGraphicsBase createGraphics(ApplicationListener listener, JoglApplicationConfiguration config);
-	
+
 	protected abstract Input createInput(JoglGraphicsBase graphics);
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Audio getAudio () {
@@ -153,7 +153,7 @@ public abstract class JoglApplicationBase implements Application {
 			return prefs;
 		}
 	}
-	
+
 	@Override
 	public void postRunnable (Runnable runnable) {
 		synchronized (runnables) {
@@ -161,7 +161,7 @@ public abstract class JoglApplicationBase implements Application {
 			Gdx.graphics.requestRendering();
 		}
 	}
-	
+
 	public boolean executeRunnables () {
 		synchronized (runnables) {
 			for (int i = runnables.size - 1; i >= 0; i--)
@@ -215,7 +215,7 @@ public abstract class JoglApplicationBase implements Application {
 	public void setLogLevel (int logLevel) {
 		this.logLevel = logLevel;
 	}
-	
+
 	/** Called when the game loop has exited. */
 	protected void end () {
 		synchronized (lifecycleListeners) {
@@ -224,13 +224,13 @@ public abstract class JoglApplicationBase implements Application {
 				listener.dispose();
 			}
 		}
+		graphics.pause();
 		if(audio!=null)
 			audio.dispose();
 		postRunnable(new Runnable() {
 			@Override
-			public void run () {
-				//FIXME maybe it is a bit brutal (and useless)
-				graphics.canvas.destroy();
+			public void run() {
+				graphics.destroy();
 			}
 		});
 	}
@@ -270,7 +270,7 @@ public abstract class JoglApplicationBase implements Application {
 			System.out.println(tag + ": " + message);
 			exception.printStackTrace(System.out);
 		}
-		
+
 	}
 
 	@Override

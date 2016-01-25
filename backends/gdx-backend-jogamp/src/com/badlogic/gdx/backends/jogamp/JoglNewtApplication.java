@@ -65,7 +65,7 @@ public class JoglNewtApplication extends JoglApplicationBase {
 	}
 
 	WindowAdapter windowListener = new WindowAdapter() {
-		public void windowDestroyed(WindowEvent e) {
+		public void windowDestroyNotify(WindowEvent e) {
 			end();
 		}
 	};

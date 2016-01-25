@@ -40,6 +40,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	String extensions;
 	volatile boolean isContinuous = true;
 	volatile boolean requestRendering = false;
+	volatile boolean cancelRendering = false;
 	GLAutoDrawable canvas;
 	Animator animator;
 	long frameStart = System.nanoTime();
@@ -47,7 +48,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	float deltaTime = 0;
 	int fps;
 	int frames;
-	boolean paused = true;
+	boolean paused = true, disposed = false;
 	JoglApplicationConfiguration config;
 
 	long frameId = -1;
@@ -92,7 +93,6 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 
 		//canvas.setBackground(Color.BLACK);
 		canvas.addGLEventListener(this);
-
 	}
 
 	protected abstract GLAutoDrawable createCanvas(final GLCapabilities caps);
@@ -102,6 +102,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	void create () {
+		disposed = false;
 		frameStart = System.nanoTime();
 		lastFrameTime = frameStart;
 		deltaTime = 0;
@@ -110,9 +111,12 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	void pause () {
+		cancelRendering = true;
 		synchronized (this) {
 			paused = true;
 		}
+		// stop here if not yet fully initialized
+		if (!created) return;
 		animator.stop();
 		if (!canvas.getContext().isCurrent()) {
 		    canvas.getContext().makeCurrent();
@@ -121,11 +125,13 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	void resume () {
-		if (!canvas.getContext().isCurrent()) {
-		    canvas.getContext().makeCurrent();
-		}
-		listener.resume();
 		paused = false;
+		cancelRendering = false;
+		if (!created) return;
+		if (!canvas.getContext().isCurrent()) {
+	    canvas.getContext().makeCurrent();
+	  }
+		listener.resume();
 		frameStart = System.nanoTime();
 		lastFrameTime = frameStart;
 		deltaTime = 0;
@@ -158,7 +164,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		synchronized (this) {
 			if (!paused) {
 				final boolean shouldRender = ((JoglApplicationBase)Gdx.app).executeRunnables() | shouldRender();
-				if (shouldRender) {
+				if (shouldRender && !cancelRendering) {
 					updateTime();
 					((JoglInput) (Gdx.input)).processEvents();
 					frameId++;
@@ -175,7 +181,11 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		if (!canvas.getContext().isCurrent()) {
 		    canvas.getContext().makeCurrent();
 		}
+
+		pause();
+		disposed = true;
 		listener.dispose();
+		canvas.destroy();
 	}
 
 	@Override
@@ -189,8 +199,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		setContinuousRendering(true);
-        pause();
-        destroy();
+		created = false;
 	}
 
 	@Override
