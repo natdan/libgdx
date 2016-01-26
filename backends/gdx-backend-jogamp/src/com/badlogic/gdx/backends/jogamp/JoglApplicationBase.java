@@ -225,6 +225,8 @@ public abstract class JoglApplicationBase implements Application {
 			}
 		}
 		graphics.pause();
+		listener.pause();
+		listener.dispose();
 		if(audio!=null)
 			audio.dispose();
 		postRunnable(new Runnable() {

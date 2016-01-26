@@ -19,9 +19,6 @@ package com.badlogic.gdx.backends.jogamp.audio;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import com.jogamp.common.nio.Buffers;
-import com.jogamp.openal.*;
-import com.jogamp.openal.util.ALut;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.audio.AudioDevice;
 import com.badlogic.gdx.audio.AudioRecorder;
@@ -33,12 +30,23 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.LongMap;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALConstants;
+import com.jogamp.openal.ALException;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
 
 /** @author Nathan Sweet */
 public class OpenALAudio implements Audio {
 
 	static {
       ALut.alutInit();
+      Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      	public void run() {
+      		ALut.alutExit();
+      	}
+      }));
    }
 	private IntBuffer ib = Buffers.newDirectIntBuffer(1);
 	private final int deviceBufferSize;
@@ -50,7 +58,7 @@ public class OpenALAudio implements Audio {
 	private ObjectMap<String, Class<? extends OpenALSound>> extensionToSoundClass = new ObjectMap();
 	private ObjectMap<String, Class<? extends OpenALMusic>> extensionToMusicClass = new ObjectMap();
 	private OpenALSound[] recentSounds;
-	private int mostRecetSound = -1;
+	private int mostRecentSound = -1;
 
 	Array<OpenALMusic> music = new Array(false, 1, OpenALMusic.class);
 	boolean noDevice = false;
@@ -83,7 +91,7 @@ public class OpenALAudio implements Audio {
 		allSources = new IntArray(false, simultaneousSources);
 		IntBuffer channelsNioBuffer = Buffers.newDirectIntBuffer(simultaneousSources);
 		al.alGenSources(simultaneousSources, channelsNioBuffer);
-		if (al.alGetError() != ALConstants.AL_NO_ERROR) {
+		if (al.alGetError() == ALConstants.AL_NO_ERROR) {
 			for (int i = 0; i < simultaneousSources; i++) {
 				int sourceID = channelsNioBuffer.get(i);
 				if (sourceID == 0)
@@ -365,15 +373,15 @@ public class OpenALAudio implements Audio {
 	 * play */
 	protected void retain (OpenALSound sound, boolean stop) {
 		// Move the pointer ahead and wrap
-		mostRecetSound++;
-		mostRecetSound %= recentSounds.length;
+		mostRecentSound++;
+		mostRecentSound %= recentSounds.length;
 
 		if (stop) {
 			// Stop the least recent sound (the one we are about to bump off the buffer)
-			if (recentSounds[mostRecetSound] != null) recentSounds[mostRecetSound].stop();
+			if (recentSounds[mostRecentSound] != null) recentSounds[mostRecentSound].stop();
 		}
 
-		recentSounds[mostRecetSound] = sound;
+		recentSounds[mostRecentSound] = sound;
 	}
 
 	/** Removes the disposed sound from the least recently played list */
