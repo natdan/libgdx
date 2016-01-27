@@ -40,7 +40,7 @@
         <get src="${jogamp}/jogl-all-natives-windows-amd64.jar" dest="backends/gdx-backend-jogamp/libs/"/>
         <get src="${jogamp}/jogl-all-natives-windows-i586.jar" dest="backends/gdx-backend-jogamp/libs/"/>
      </target>
-
+    
     <target name="fetch-robovm">
         <mkdir dir="backends/gdx-backend-robovm/libs/"/>
         <get src="${robovm}/robovm-cacerts-full.jar" dest="backends/gdx-backend-robovm/libs/"/>
