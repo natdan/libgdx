@@ -248,6 +248,8 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 		getCanvas().setSize(displayMode.width, displayMode.height);
 		getCanvas().setUndecorated(true);
 		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, displayMode.width, displayMode.height);
+		config.width = displayMode.width;
+		config.height = displayMode.height;
 
 		return true;
 	}
@@ -264,6 +266,8 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 			getCanvas().setPosition(x, y);
 		}
 		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, width, height);
+		config.width = width;
+		config.height = height;
 		super.resume();
 		return true;
 	}
