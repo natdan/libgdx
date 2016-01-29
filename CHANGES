@@ -1,6 +1,10 @@
+[1.9.2]
+- Fixed bug in AndroidGL20.cpp which cast a pointer to a 32-bit int. Crash on 64-bit ARM, but only for a specific code path and address...
+
 [1.9.1]
 - API Change: Override GwtApplication#createApplicationListener() to create your ApplicationListener
   on GWT, overriding GwtApplication#getApplicationListener() isn't needed anymore, see https://github.com/libgdx/libgdx/issues/3628
+- Fixed ARM64 and x86_64 binaries for Android
 
 [1.9.0]
 - API Change: Lwjgl3ApplicationConfiguration#setBackbufferConfig -> setBackBufferConfig
