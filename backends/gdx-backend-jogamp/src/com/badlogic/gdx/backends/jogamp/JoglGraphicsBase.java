@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,6 @@
 
 package com.badlogic.gdx.backends.jogamp;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilitiesImmutable;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLException;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -30,6 +23,13 @@ import com.badlogic.gdx.backends.jogamp.audio.OpenALAudio;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLCapabilitiesImmutable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 
 public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
@@ -40,6 +40,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	String extensions;
 	volatile boolean isContinuous = true;
 	volatile boolean requestRendering = false;
+	volatile boolean cancelRendering = false;
 	GLAutoDrawable canvas;
 	Animator animator;
 	long frameStart = System.nanoTime();
@@ -47,14 +48,14 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	float deltaTime = 0;
 	int fps;
 	int frames;
-	boolean paused = true;
+	boolean paused = true, disposed = false;
 	JoglApplicationConfiguration config;
 
 	long frameId = -1;
 	GL20 gl20;
 	GL30 gl30;
 
-	
+
 	void initialize (ApplicationListener listener, JoglApplicationConfiguration config) {
 		if (listener == null) throw new GdxRuntimeException("RenderListener must not be null");
 		this.listener = listener;
@@ -73,11 +74,11 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 			// core only contexts are not supported for GL20.
 			try {
 				caps = new GLCapabilities(GLProfile.get(GLProfile.GL2));
-			} catch (GLException e) {				
+			} catch (GLException e) {
 				caps = new GLCapabilities(GLProfile.get(GLProfile.GLES2));
 			}
 		}
-		
+
 		caps.setRedBits(config.r);
 		caps.setGreenBits(config.g);
 		caps.setBlueBits(config.b);
@@ -89,11 +90,11 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		caps.setDoubleBuffered(true);
 
 		canvas = createCanvas(caps);
+
 		//canvas.setBackground(Color.BLACK);
 		canvas.addGLEventListener(this);
-
 	}
-	
+
 	protected abstract GLAutoDrawable createCanvas(final GLCapabilities caps);
 
 	GLAutoDrawable getCanvas () {
@@ -101,6 +102,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	void create () {
+		disposed = false;
 		frameStart = System.nanoTime();
 		lastFrameTime = frameStart;
 		deltaTime = 0;
@@ -109,9 +111,12 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	void pause () {
+		cancelRendering = true;
 		synchronized (this) {
 			paused = true;
 		}
+		// stop here if not yet fully initialized
+		if (!created) return;
 		animator.stop();
 		if (!canvas.getContext().isCurrent()) {
 		    canvas.getContext().makeCurrent();
@@ -120,11 +125,13 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	void resume () {
-		if (!canvas.getContext().isCurrent()) {
-		    canvas.getContext().makeCurrent();
-		}
-		listener.resume();
 		paused = false;
+		cancelRendering = false;
+		if (!created) return;
+		if (!canvas.getContext().isCurrent()) {
+	    canvas.getContext().makeCurrent();
+	  }
+		listener.resume();
 		frameStart = System.nanoTime();
 		lastFrameTime = frameStart;
 		deltaTime = 0;
@@ -132,7 +139,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		animator.setRunAsFastAsPossible(true);
 		animator.start();
 	}
-	
+
 	@Override
 	public void init (GLAutoDrawable drawable) {
 		initializeGLInstances(drawable);
@@ -157,7 +164,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		synchronized (this) {
 			if (!paused) {
 				final boolean shouldRender = ((JoglApplicationBase)Gdx.app).executeRunnables() | shouldRender();
-				if (shouldRender) {
+				if (shouldRender && !cancelRendering) {
 					updateTime();
 					((JoglInput) (Gdx.input)).processEvents();
 					frameId++;
@@ -174,9 +181,13 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		if (!canvas.getContext().isCurrent()) {
 		    canvas.getContext().makeCurrent();
 		}
+
+		pause();
+		disposed = true;
 		listener.dispose();
+		canvas.destroy();
 	}
-	
+
 	@Override
 	public void setVSync (boolean vsync) {
 		if (vsync)
@@ -188,8 +199,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		setContinuousRendering(true);
-        pause();
-        destroy();
+		created = false;
 	}
 
 	@Override
@@ -197,7 +207,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		if (extensions == null) extensions = Gdx.gl.glGetString(GL20.GL_EXTENSIONS);
 		return extensions.contains(extension);
 	}
-	
+
 	@Override
 	public void setContinuousRendering (boolean isContinuous) {
 		this.isContinuous = isContinuous;
@@ -222,7 +232,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 			return rq || isContinuous /*|| isDirty()*/;
 		}
 	}
-	
+
 	@Override
 	public BufferFormat getBufferFormat () {
 		GLCapabilitiesImmutable caps = canvas.getChosenGLCapabilities();
@@ -244,7 +254,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		Gdx.gl = gl20;
 		Gdx.gl20 = gl20;
 		Gdx.gl30 = gl30;
-		
+
 		if (major <= 1)
 			throw new GdxRuntimeException("OpenGL 2.0 or higher with the FBO extension is required. OpenGL version: " + major + "." + minor);
 		if (major == 2 && !drawable.getGL().isGLES2Compatible()) {
@@ -258,7 +268,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public float getPpiX () {
 		return config.getScreenResolution();
@@ -283,7 +293,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	public float getDensity () {
 		return (config.getScreenResolution() / 160f);
 	}
-	
+
 	@Override
 	public DisplayMode[] getDisplayModes () {
 		return config.getDisplayModes();
@@ -320,12 +330,12 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	public GL20 getGL20 () {
 		return gl20;
 	}
-	
+
 	@Override
 	public GL30 getGL30 () {
 		return gl30;
 	}
-	
+
 	@Override
 	public boolean isGL30Available () {
 		return gl30 != null;
@@ -335,9 +345,24 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	public GraphicsType getType () {
 		return GraphicsType.JoglGL;
 	}
-	
+
 	@Override
 	public long getFrameId() {
 		return frameId;
+	}
+
+	@Override
+	public int getBackBufferWidth() {
+		return getWidth();
+	}
+
+	@Override
+	public int getBackBufferHeight() {
+		return getHeight ();
+	}
+
+	@Override
+	public DisplayMode getDisplayMode() {
+		return getDisplayMode(getMonitor());
 	}
 }

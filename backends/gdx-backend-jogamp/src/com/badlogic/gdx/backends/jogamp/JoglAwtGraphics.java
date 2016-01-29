@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,19 +28,20 @@ import java.awt.GraphicsEnvironment;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.awt.GLCanvas;
 
 /**
- * 
+ *
  * @author Julien Gouesse
  *
  */
 public class JoglAwtGraphics extends JoglGraphicsBase {
 
 	private final JoglAwtDisplayMode desktopMode;
-	
+
 	private boolean isFullscreen = false;
 
 	public JoglAwtGraphics (ApplicationListener listener, JoglAwtApplicationConfiguration config) {
@@ -49,15 +50,15 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 		initialize(listener, config);
 		desktopMode = config.getDesktopDisplayMode();
 	}
-	
+
 	protected GLCanvas createCanvas(final GLCapabilities caps) {
 		return new GLCanvas(caps);
 	}
-	
+
 	GLCanvas getCanvas () {
 		return (GLCanvas) super.getCanvas();
 	}
-	
+
 	@Override
 	public int getHeight () {
 		return getCanvas().getHeight();
@@ -67,22 +68,22 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 	public int getWidth () {
 		return getCanvas().getWidth();
 	}
-	
+
 	@Override
 	public void create() {
 		super.create();
 	}
-	
+
 	@Override
 	public void pause() {
 		super.pause();
 	}
-	
+
 	@Override
 	public void resume() {
 		super.resume();
 	}
-	
+
 	@Override
 	public void destroy () {
 		super.destroy();
@@ -98,15 +99,6 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 		return device.isFullScreenSupported() && (Gdx.app instanceof JoglAwtApplication);
 	}
 
-	protected static class JoglAwtDisplayMode extends DisplayMode {
-		final java.awt.DisplayMode mode;
-
-		protected JoglAwtDisplayMode (int width, int height, int refreshRate, int bitsPerPixel, java.awt.DisplayMode mode) {
-			super(width, height, refreshRate, bitsPerPixel);
-			this.mode = mode;
-		}
-	}
-
 	@Override
 	public void setTitle (String title) {
 		final Frame frame = findFrame(getCanvas());
@@ -116,28 +108,71 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 	}
 
 	@Override
-	public DisplayMode getDesktopDisplayMode () {
-		return desktopMode;
-	}
-
-	@Override
 	public boolean isFullscreen () {
 		return isFullscreen;
 	}
-	
-	@Override
-	public boolean setDisplayMode (int width, int height, boolean fullscreen) {
-		if (!supportsDisplayModeChange()) return false;
 
-		if (!fullscreen) {
-			isFullscreen = false;
-			return setWindowedMode(width, height);
-		} else {
-			DisplayMode mode = findBestMatch(width, height);
-			if (mode == null) return false;
-			isFullscreen = true;
-			return setDisplayMode(mode);
+	@Override
+	public Monitor getPrimaryMonitor() {
+		final GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		final GraphicsDevice device = genv.getDefaultScreenDevice();
+		return JoglAwtMonitor.from(device);
+	}
+
+	@Override
+	public Monitor getMonitor() {
+		if(super.canvas == null) return getPrimaryMonitor();
+		return JoglAwtMonitor.from(getCanvas().getGraphicsConfiguration().getDevice());
+	}
+
+	@Override
+	public Monitor[] getMonitors() {
+		final GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		final GraphicsDevice[] devices = genv.getScreenDevices();
+		final Monitor[] monitors = new Monitor[devices.length];
+		for (int i = 0; i < devices.length; i++) {
+			monitors[i] = JoglAwtMonitor.from(devices[i]);
 		}
+		return monitors;
+	}
+
+	@Override
+	public DisplayMode[] getDisplayModes(Monitor monitor) {
+		if (!(monitor instanceof JoglAwtMonitor)) {
+			throw new IllegalArgumentException("incompatible monitor type: " + monitor.getClass());
+		}
+
+		final JoglAwtMonitor awtMonitor = (JoglAwtMonitor) monitor;
+		final java.awt.DisplayMode[] awtDisplayModes = awtMonitor.device.getDisplayModes();
+	  final DisplayMode[] gdxDisplayModes = new DisplayMode[awtDisplayModes.length];
+	  for (int i = 0; i < gdxDisplayModes.length; i++) {
+	  	gdxDisplayModes[i] = JoglAwtDisplayMode.from(awtDisplayModes[i]);
+	  }
+		return gdxDisplayModes;
+	}
+
+	@Override
+	public DisplayMode getDisplayMode(Monitor monitor) {
+		if (!(monitor instanceof JoglAwtMonitor)) {
+			throw new IllegalArgumentException("incompatible monitor type: " + monitor.getClass());
+		}
+
+		return JoglAwtDisplayMode.from(((JoglAwtMonitor)monitor).device.getDisplayMode());
+	}
+
+	@Override
+	public boolean setFullscreenMode(DisplayMode displayMode) {
+		return setFullscreenDisplayMode(displayMode);
+	}
+
+	@Override
+	public boolean setWindowedMode(int width, int height) {
+		return setWindowedDisplayMode(width, height);
+	}
+
+	@Override
+	public void setSystemCursor(SystemCursor systemCursor) {
+		// FIXME ????
 	}
 
 	protected JoglAwtDisplayMode findBestMatch (int width, int height) {
@@ -153,8 +188,28 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 		return (JoglAwtDisplayMode)best;
 	}
 
+	protected static Frame findFrame (Component component) {
+		Container parent = component.getParent();
+		while (parent != null) {
+			if (parent instanceof Frame) {
+				return (Frame)parent;
+			}
+			parent = parent.getParent();
+		}
+
+		return null;
+	}
+
 	@Override
-	public boolean setDisplayMode (DisplayMode displayMode) {
+	public Cursor newCursor(Pixmap pixmap, int xHotspot, int yHotspot) {
+		return null;
+	}
+
+	@Override
+	public void setCursor(Cursor cursor) {
+	}
+
+	private boolean setFullscreenDisplayMode (DisplayMode displayMode) {
 		if (!supportsDisplayModeChange()) return false;
 
 		GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -203,7 +258,7 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 		return true;
 	}
 
-	private boolean setWindowedMode (int width, int height) {
+	private boolean setWindowedDisplayMode (int width, int height) {
 
 		GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice device = genv.getDefaultScreenDevice();
@@ -261,24 +316,30 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 		return true;
 	}
 
-	protected static Frame findFrame (Component component) {
-		Container parent = component.getParent();
-		while (parent != null) {
-			if (parent instanceof Frame) {
-				return (Frame)parent;
-			}
-			parent = parent.getParent();
+	protected static class JoglAwtMonitor extends Monitor {
+		final GraphicsDevice device;
+
+		protected JoglAwtMonitor(int width, int height, String name, GraphicsDevice device) {
+			super(width, height, name);
+			this.device = device;
 		}
 
-		return null;
+		protected static JoglAwtMonitor from(GraphicsDevice device) {
+			return new JoglAwtMonitor(device.getDisplayMode().getWidth(), device.getDisplayMode().getHeight(),
+					device.getIDstring(), device);
+		}
 	}
 
-	@Override
-	public Cursor newCursor(Pixmap pixmap, int xHotspot, int yHotspot) {
-		return null;
-	}
+	protected static class JoglAwtDisplayMode extends DisplayMode {
+		final java.awt.DisplayMode mode;
 
-	@Override
-	public void setCursor(Cursor cursor) {
+		protected JoglAwtDisplayMode (int width, int height, int refreshRate, int bitsPerPixel, java.awt.DisplayMode mode) {
+			super(width, height, refreshRate, bitsPerPixel);
+			this.mode = mode;
+		}
+
+		protected static JoglAwtDisplayMode from(java.awt.DisplayMode mode) {
+			return new JoglAwtDisplayMode(mode.getWidth(), mode.getHeight(), mode.getRefreshRate(), mode.getBitDepth(), mode);
+		}
 	}
 }

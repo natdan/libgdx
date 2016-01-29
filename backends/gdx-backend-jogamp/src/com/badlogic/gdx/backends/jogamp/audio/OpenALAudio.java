@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,6 @@ package com.badlogic.gdx.backends.jogamp.audio;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import com.jogamp.common.nio.Buffers;
-import com.jogamp.openal.*;
-import com.jogamp.openal.util.ALut;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.audio.AudioDevice;
 import com.badlogic.gdx.audio.AudioRecorder;
@@ -33,12 +30,23 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.LongMap;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALConstants;
+import com.jogamp.openal.ALException;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
 
 /** @author Nathan Sweet */
 public class OpenALAudio implements Audio {
-	
+
 	static {
       ALut.alutInit();
+      Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      	public void run() {
+      		ALut.alutExit();
+      	}
+      }));
    }
 	private IntBuffer ib = Buffers.newDirectIntBuffer(1);
 	private final int deviceBufferSize;
@@ -50,7 +58,7 @@ public class OpenALAudio implements Audio {
 	private ObjectMap<String, Class<? extends OpenALSound>> extensionToSoundClass = new ObjectMap();
 	private ObjectMap<String, Class<? extends OpenALMusic>> extensionToMusicClass = new ObjectMap();
 	private OpenALSound[] recentSounds;
-	private int mostRecetSound = -1;
+	private int mostRecentSound = -1;
 
 	Array<OpenALMusic> music = new Array(false, 1, OpenALMusic.class);
 	boolean noDevice = false;
@@ -83,7 +91,7 @@ public class OpenALAudio implements Audio {
 		allSources = new IntArray(false, simultaneousSources);
 		IntBuffer channelsNioBuffer = Buffers.newDirectIntBuffer(simultaneousSources);
 		al.alGenSources(simultaneousSources, channelsNioBuffer);
-		if (al.alGetError() != ALConstants.AL_NO_ERROR) {
+		if (al.alGetError() == ALConstants.AL_NO_ERROR) {
 			for (int i = 0; i < simultaneousSources; i++) {
 				int sourceID = channelsNioBuffer.get(i);
 				if (sourceID == 0)
@@ -102,10 +110,10 @@ public class OpenALAudio implements Audio {
 		al.alListenerfv(ALConstants.AL_VELOCITY, velocity);
 		FloatBuffer position = (FloatBuffer)Buffers.newDirectFloatBuffer(3).put(new float[] {0.0f, 0.0f, 0.0f}).flip();
 		al.alListenerfv(ALConstants.AL_POSITION, position);
-		
+
 		recentSounds = new OpenALSound[simultaneousSources];
 	}
-	
+
 	public AL getAL(){
 		return(al);
 	}
@@ -216,7 +224,7 @@ public class OpenALAudio implements Audio {
 			}
 		}
 	}
-	
+
 	void pauseSourcesWithBuffer (int bufferID) {
 		if (noDevice) return;
 		for (int i = 0, n = idleSources.size; i < n; i++) {
@@ -226,7 +234,7 @@ public class OpenALAudio implements Audio {
 				al.alSourcePause(sourceID);
 		}
 	}
-	
+
 	void resumeSourcesWithBuffer (int bufferID) {
 		if (noDevice) return;
 		for (int i = 0, n = idleSources.size; i < n; i++) {
@@ -257,13 +265,13 @@ public class OpenALAudio implements Audio {
 		int sourceId = soundIdToSource.get(soundId);
 		al.alSourceStop(sourceId);
 	}
-	
+
 	public void pauseSound (long soundId) {
 		if (!soundIdToSource.containsKey(soundId)) return;
 		int sourceId = soundIdToSource.get(soundId);
 		al.alSourcePause(sourceId);
 	}
-	
+
 	public void resumeSound (long soundId) {
 		if (!soundIdToSource.containsKey(soundId)) return;
 		int sourceId = soundIdToSource.get(soundId);
@@ -314,7 +322,7 @@ public class OpenALAudio implements Audio {
 		sourceToSoundId.clear();
 		soundIdToSource.clear();
 
-		//FIXME not sure that we have to do something to "destroy" AL 
+		//FIXME not sure that we have to do something to "destroy" AL
 	}
 
 	public AudioDevice newAudioDevice (int sampleRate, final boolean isMono) {
@@ -365,15 +373,15 @@ public class OpenALAudio implements Audio {
 	 * play */
 	protected void retain (OpenALSound sound, boolean stop) {
 		// Move the pointer ahead and wrap
-		mostRecetSound++;
-		mostRecetSound %= recentSounds.length;
+		mostRecentSound++;
+		mostRecentSound %= recentSounds.length;
 
 		if (stop) {
 			// Stop the least recent sound (the one we are about to bump off the buffer)
-			if (recentSounds[mostRecetSound] != null) recentSounds[mostRecetSound].stop();
+			if (recentSounds[mostRecentSound] != null) recentSounds[mostRecentSound].stop();
 		}
 
-		recentSounds[mostRecetSound] = sound;
+		recentSounds[mostRecentSound] = sound;
 	}
 
 	/** Removes the disposed sound from the least recently played list */

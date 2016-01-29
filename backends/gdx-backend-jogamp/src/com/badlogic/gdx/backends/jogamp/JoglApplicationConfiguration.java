@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,9 +35,13 @@ public abstract class JoglApplicationConfiguration {
 	/** width & height of application **/
 	public int width = 480, height = 320;
 	/** x & y of application window, -1 for center **/
-	public int x = -1, y = -1;//FIXME use those fields
+	public int x = -1, y = -1;
 	/** fullscreen **/
 	public boolean fullscreen = false;
+	/** windowed mode resizable **/
+	public boolean resizable = true;
+	/** windowed mode undecorated **/
+	public boolean undecorated = true;
 	/** whether to enable vsync, can be changed at runtime via {@link Graphics#setVSync(boolean)} **/
 	public boolean vSyncEnabled = true;
 	/** title of application **/
@@ -56,14 +60,15 @@ public abstract class JoglApplicationConfiguration {
 	public JoglApplicationConfiguration() {
 		super();
 	}
-	
+
 	public JoglApplicationConfiguration(final String title, final int width, final int height) {
 		super();
 		this.title = title;
 		this.width = width;
 		this.height = height;
+		this.resizable = false;
 	}
-	
+
 	/** Sets the r, g, b and a bits per channel based on the given {@link DisplayMode} and sets the fullscreen flag to true.
 	 * @param mode */
 	public void setFromDisplayMode (DisplayMode mode) {
@@ -89,10 +94,10 @@ public abstract class JoglApplicationConfiguration {
 		}
 		this.fullscreen = true;
 	}
-	
+
 	public abstract DisplayMode[] getDisplayModes();
-	
+
 	public abstract DisplayMode getDesktopDisplayMode();
-	
+
 	public abstract float getScreenResolution();
 }
