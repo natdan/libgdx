@@ -1,4 +1,8 @@
-[1.8.1]
+[1.9.1]
+- API Change: Override GwtApplication#createApplicationListener() to create your ApplicationListener
+  on GWT, overriding GwtApplication#getApplicationListener() isn't needed anymore, see https://github.com/libgdx/libgdx/issues/3628
+
+[1.9.0]
 - API Change: Lwjgl3ApplicationConfiguration#setBackbufferConfig -> setBackBufferConfig
 - Fixed HexagonalTiledMapRenderer, see https://github.com/libgdx/libgdx/pull/3654
 - Added support for locking the screen orientation in GWT, see https://github.com/libgdx/libgdx/pull/3633
@@ -9,6 +13,7 @@
 - Added system cursors to GWT, fix 'Ibeam' system cursor not working on LWJGL3.
 - Added experimental AndroidApplicationConfiguration#useGL30 and IOSApplicationConfiguration#useGL30 for testing OpenGL ES 3.0 support on mobile devices, do not use in production.
 - Fix broken kerning for FreeType fonts, see https://github.com/libgdx/libgdx/pull/3756
+- Added ARM64 and x86_64 binaries for Android
 
 [1.8.0]
 - API Change: Rewrote FreeType shadow rendering (much better).
