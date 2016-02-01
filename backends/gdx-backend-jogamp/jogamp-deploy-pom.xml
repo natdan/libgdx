@@ -8,6 +8,34 @@
   <version>1.9.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>libGDX JogAmp Backend</name>
+  <description>Implementation of LibGDX backend provider that uses JogAmp JOGL/JOAL.</description>
+
+  <!-- license from parent project -->
+  <licenses>
+    <license>
+      <name>Apache Licence 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>gouessej</id>
+      <name>Julien Gouesse</name>
+      <email>gouessej@orange.fr</email>
+    </developer>
+    <developer>
+      <id>xranby</id>
+      <name>Xerxes Ranby</name>
+      <email>xerxes@zafena.se</email>
+    </developer>
+    <developer>
+      <id>bgroenks96</id>
+      <name>Brian Groenke</name>
+      <email>brian@forerunnergames.com</email>
+    </developer>
+  </developers>
   
   <properties>
     <jogamp.version>2.3.2</jogamp.version>
@@ -136,6 +164,12 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:git:git@github.com:gouessej/libgdx.git</connection>
+    <developerConnection>scm:git:git@github.com:bgroenks96/libgdx.git</developerConnection>
+    <url>git@github.com:gouessej/libgdx.git</url>
+  </scm>
 
   <distributionManagement>
     <repository>
