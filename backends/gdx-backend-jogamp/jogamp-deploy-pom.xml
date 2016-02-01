@@ -171,16 +171,4 @@
     <url>git@github.com:gouessej/libgdx.git</url>
   </scm>
 
-  <distributionManagement>
-    <repository>
-      <id>internal</id>
-      <name>OSSPowered Release Repo</name>
-      <url>http://repos.osspowered.org/repository/internal</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>OSSPowered Snapshot Repo</name>
-      <url>http://repos.osspowered.org/repository/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>
