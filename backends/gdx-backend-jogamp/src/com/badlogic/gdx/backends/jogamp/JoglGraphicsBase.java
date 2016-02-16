@@ -183,6 +183,8 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		}
 
 		pause();
+		// prevent animator from touching the dying drawable context
+		animator.remove(canvas);
 		disposed = true;
 		listener.dispose();
 		canvas.destroy();

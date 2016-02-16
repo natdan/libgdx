@@ -250,12 +250,14 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, displayMode.width, displayMode.height);
 		config.width = displayMode.width;
 		config.height = displayMode.height;
+		// do a full window repaint; intended to help reduce flickering/fragmentation
+		// after a configuration change on some systems
+		getCanvas().windowRepaint(0, 0, displayMode.width, displayMode.height);
 
 		return true;
 	}
 
 	private boolean setWindowedDisplayMode (int width, int height, int x, int y) {
-		super.pause();
 		getCanvas().setFullscreen(false);
 		getCanvas().setSize(width, height);
 		if (x < 0 || y < 0) {
@@ -268,7 +270,10 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 		if (Gdx.gl != null) Gdx.gl.glViewport(0, 0, width, height);
 		config.width = width;
 		config.height = height;
-		super.resume();
+		// do a full window repaint; intended to help reduce flickering/fragmentation
+		// after a configuration change on some systems
+		getCanvas().windowRepaint(0, 0, width, height);
+
 		return true;
 	}
 
