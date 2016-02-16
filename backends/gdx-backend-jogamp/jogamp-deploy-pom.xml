@@ -42,13 +42,18 @@
   </properties>
   
   <repositories>
+    <!-- This repository should be used only for unreleased development versions, typically all release candidates and post builds -->
+    <repository>
+      <id>jogamp</id>
+      <url>http://jogamp.org/deployment/maven</url>
+    </repository>
     <repository>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
       <id>central</id>
       <name>Maven Central</name>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <url>https://repo1.maven.org/maven2</url>
     </repository>
   </repositories>
 
