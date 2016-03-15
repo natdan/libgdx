@@ -16,6 +16,8 @@
 
 package com.badlogic.gdx.backends.iosrobovm;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.graphics.glutils.GLVersion;
 import org.robovm.apple.coregraphics.CGRect;
 import org.robovm.apple.foundation.NSObject;
 import org.robovm.apple.glkit.GLKView;
@@ -112,7 +114,9 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 			graphics.width = (int)bounds.getWidth();
 			graphics.height = (int)bounds.getHeight();
 			graphics.makeCurrent();
-			app.listener.resize(graphics.width, graphics.height);
+			if (graphics.created) {
+				app.listener.resize(graphics.width, graphics.height);
+			}
 		}
 		
 		@Callback
@@ -157,6 +161,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
 	IOSApplicationConfiguration config;
 	EAGLContext context;
+	GLVersion glVersion;
 	GLKView view;
 	IOSUIViewController viewController;
 
@@ -180,8 +185,6 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 			gl20 = new IOSGLES20();
 			gl30 = null;
 		}
-
-
 
 		view = new GLKView(new CGRect(0, 0, bounds.getWidth(), bounds.getHeight()), context) {
 			@Method(selector = "touchesBegan:withEvent:")
@@ -307,6 +310,11 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 			app.listener.create();
 			app.listener.resize(width, height);
 			created = true;
+
+			String versionString = gl20.glGetString(GL20.GL_VERSION);
+			String vendorString = gl20.glGetString(GL20.GL_VENDOR);
+			String rendererString = gl20.glGetString(GL20.GL_RENDERER);
+			glVersion = new GLVersion(Application.ApplicationType.iOS, versionString, vendorString, rendererString);
 		}
 		if (appPaused) {
 			return;
@@ -391,6 +399,11 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 	@Override
 	public GraphicsType getType () {
 		return GraphicsType.iOSGL;
+	}
+
+	@Override
+	public GLVersion getGLVersion () {
+		return glVersion;
 	}
 
 	@Override
