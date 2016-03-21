@@ -16,23 +16,27 @@
 
 package com.badlogic.gdx.backends.jogamp;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.jogamp.audio.OpenALAudio;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.glutils.GLVersion;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLCapabilitiesImmutable;
+import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 
 public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
+	static GLVersion glVersion;
 	static int major, minor;
 
 	ApplicationListener listener = null;
@@ -143,6 +147,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	@Override
 	public void init (GLAutoDrawable drawable) {
 		initializeGLInstances(drawable);
+		initGLVersion();
 		setVSync(config.vSyncEnabled);
 
 		if (!created) {
@@ -366,5 +371,17 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	@Override
 	public DisplayMode getDisplayMode() {
 		return getDisplayMode(getMonitor());
+	}
+
+	@Override
+	public GLVersion getGLVersion () {
+		return glVersion;
+	}
+
+	private static void initGLVersion () {
+		String versionString = GLContext.getCurrent().getGLVersionNumber().toString();
+		String vendorString = GLContext.getCurrentGL().glGetString(GL.GL_VENDOR);
+		String rendererString = GLContext.getCurrentGL().glGetString(GL.GL_RENDERER);
+		glVersion = new GLVersion(Application.ApplicationType.Desktop, versionString, vendorString, rendererString);
 	}
 }

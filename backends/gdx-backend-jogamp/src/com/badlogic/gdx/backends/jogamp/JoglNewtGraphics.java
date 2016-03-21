@@ -206,12 +206,16 @@ public class JoglNewtGraphics extends JoglGraphicsBase {
 		getCanvas().setPointerIcon(null);
 	}
 
+	@Override
 	public void setResizable(boolean resizable) {
 		getCanvas().setResizable(resizable);
+		this.config.resizable = resizable;
 	}
 
+	@Override
 	public void setUndecorated(boolean undecorated) {
 		getCanvas().setUndecorated(undecorated);
+		this.config.undecorated = undecorated;
 	}
 
 	public void setPosition(int x, int y) {
