@@ -379,7 +379,7 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 	}
 
 	private static void initGLVersion () {
-		String versionString = GLContext.getCurrentGL().glGetString(GL.GL_VERSION);
+		String versionString = GLContext.getCurrent().getGLVersionNumber().toString();
 		String vendorString = GLContext.getCurrentGL().glGetString(GL.GL_VENDOR);
 		String rendererString = GLContext.getCurrentGL().glGetString(GL.GL_RENDERER);
 		glVersion = new GLVersion(Application.ApplicationType.Desktop, versionString, vendorString, rendererString);
