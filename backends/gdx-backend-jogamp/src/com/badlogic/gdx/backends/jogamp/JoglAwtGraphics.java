@@ -171,6 +171,22 @@ public class JoglAwtGraphics extends JoglGraphicsBase {
 	}
 
 	@Override
+	public void setUndecorated (boolean undecorated) {
+		final Frame window = findFrame(getCanvas());
+		if (window == null) return;
+		window.setUndecorated(undecorated);
+		this.config.undecorated = undecorated;
+	}
+
+	@Override
+	public void setResizable (boolean resizable) {
+		final Frame window = findFrame(getCanvas());
+		if (window == null) return;
+		window.setResizable(resizable);
+		this.config.resizable = resizable;
+	}
+
+	@Override
 	public void setSystemCursor(SystemCursor systemCursor) {
 		// FIXME ????
 	}
