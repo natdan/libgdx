@@ -518,7 +518,7 @@ public class LwjglGraphics implements Graphics {
 
 	@Override
 	public DisplayMode getDisplayMode () {
-		org.lwjgl.opengl.DisplayMode mode = Display.getDisplayMode();
+		org.lwjgl.opengl.DisplayMode mode = Display.getDesktopDisplayMode();
 		return new LwjglDisplayMode(mode.getWidth(), mode.getHeight(), mode.getFrequency(), mode.getBitsPerPixel(), mode);
 	}
 
