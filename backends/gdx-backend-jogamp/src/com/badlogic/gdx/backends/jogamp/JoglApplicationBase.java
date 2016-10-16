@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.badlogic.gdx.backends.jogamp;
 
+import com.badlogic.gdx.ApplicationLogger;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Audio;
@@ -42,9 +43,13 @@ public abstract class JoglApplicationBase implements Application {
 	protected ApplicationListener listener;
 	protected final Array<LifecycleListener> lifecycleListeners = new Array<LifecycleListener>();
 	private Thread shutdownHook;
+	protected ApplicationLogger applicationLogger;
+
 
 	public JoglApplicationBase (final ApplicationListener listener, final JoglApplicationConfiguration config) {
 		super();
+		setApplicationLogger(new JoglApplicationLogger());
+
 		JoglNativesLoader.load();
 		this.listener = listener;
 		this.graphics = createGraphics(listener, config);
@@ -278,5 +283,15 @@ public abstract class JoglApplicationBase implements Application {
 	@Override
 	public int getLogLevel() {
 		return logLevel;
+	}
+	
+	@Override
+	public void setApplicationLogger (ApplicationLogger applicationLogger) {
+		this.applicationLogger = applicationLogger;
+	}
+
+	@Override
+	public ApplicationLogger getApplicationLogger () {
+		return applicationLogger;
 	}
 }

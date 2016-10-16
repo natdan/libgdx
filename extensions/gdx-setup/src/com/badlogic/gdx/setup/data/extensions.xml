@@ -24,7 +24,7 @@
 		<description>Flat design skin for scene2d.ui and UI toolkit</description>
 		<package>com.kotcrab.vis.ui</package>
 		<version>1.1.1</version>
-		<compatibility>1.9.3</compatibility>
+		<compatibility>1.9.5.rpi-SNAPSHOT</compatibility>
 		<website>https://github.com/kotcrab/VisEditor/wiki/VisUI</website>
 		<gwtInherits>
 			<inherit>com.kotcrab.vis.vis-ui</inherit>
@@ -47,7 +47,7 @@
 		<description>Runtime for VisEditor</description>
 		<package>com.kotcrab.vis.runtime</package>
 		<version>0.3.2</version>
-		<compatibility>1.9.3</compatibility>
+		<compatibility>1.9.5.rpi-SNAPSHOT</compatibility>
 		<website>http://vis.kotcrab.com</website>
 		<gwtInherits>
 			<inherit>com.kotcrab.vis.vis-runtime</inherit>
@@ -122,7 +122,7 @@
 	   <description>Provides cross-platform support for Facebook Graph API</description>
 	   <package>de.tomgrill.gdxfacebook</package>
 	   <version>1.2.2</version>
-	   <compatibility>1.9.3</compatibility>
+	   <compatibility>1.9.5.rpi-SNAPSHOT</compatibility>
 	   <website>https://github.com/TomGrill/gdx-facebook</website>
 	   <gwtInherits></gwtInherits>
 	   <projects>
@@ -150,7 +150,7 @@
 	   <description>Provides cross-platform support for native dialogs</description>
 	   <package>de.tomgrill.gdxdialogs</package>
 	   <version>1.1.0</version>
-	   <compatibility>1.9.3</compatibility>
+	   <compatibility>1.9.5.rpi-SNAPSHOT</compatibility>
 	   <website>https://github.com/TomGrill/gdx-dialogs</website>
 	   <gwtInherits></gwtInherits>
 	   <projects>
