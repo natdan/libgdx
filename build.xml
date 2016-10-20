@@ -207,6 +207,7 @@
       <pathelement location="${distDir}/jogl-all.jar"/>
     </path>
     <ant antfile="../../build-template.xml" dir="backends/gdx-backend-jogamp">
+      <property name="javacTarget" value="1.6"/>
       <property name="jar" value="gdx-backend-jogamp"/>
       <reference refid="classpath"/>
     </ant>
