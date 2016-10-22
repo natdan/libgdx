@@ -3,6 +3,9 @@
 		<ant antfile="build-windows32.xml" target="clean"/>
 		<ant antfile="build-windows64.xml" target="clean"/>
 		<ant antfile="build-linux32.xml" target="clean"/>
+		<ant antfile="build-linux32.xml-arm" target="clean"/>
+		<ant antfile="build-linux32.xml-armgnueabi" target="clean"/>
+		<ant antfile="build-linux32.xml-armgnueabihf" target="clean"/>
 		<ant antfile="build-linux64.xml" target="clean"/>
 		<ant antfile="build-android32.xml" target="clean"/>
 
@@ -12,6 +15,9 @@
 		<ant antfile="build-windows32.xml"/>
 		<ant antfile="build-windows64.xml"/>
 		<ant antfile="build-linux32.xml"/>
+		<ant antfile="build-linux32-arm.xml"/>
+		<ant antfile="build-linux32-armgnueabi.xml"/>
+		<ant antfile="build-linux32-armgnueabihf.xml"/>
 		<ant antfile="build-linux64.xml"/>
 		<ant antfile="build-android32.xml"/>
 
@@ -22,12 +28,23 @@
 			<fileset dir="../libs/windows32" includes="gdx-freetype.dll"/>
 			<fileset dir="../libs/windows64" includes="gdx-freetype64.dll"/>
 			<fileset dir="../libs/linux32" includes="libgdx-freetype.so"/>
+			<fileset dir="../libs/linux32-arm" includes="libgdx-freetypearm.so"/>
+			<fileset dir="../libs/linux32-armgnueabi" includes="libgdx-freetypearmel.so"/>
+			<fileset dir="../libs/linux32-armgnueabihf" includes="libgdx-freetypearmhf.so"/>
 			<fileset dir="../libs/linux64" includes="libgdx-freetype64.so"/>
 			<fileset dir="../libs/macosx32" includes="libgdx-freetype.dylib"/>
 			<fileset dir="../libs/macosx64" includes="libgdx-freetype64.dylib"/>
 
 		</jar>
 	</target>
-
+	
+	<target name="update-natives">
+		<jar destfile="../libs/gdx-freetype-natives.jar" update="true">
+			<fileset dir="../libs/linux32arm" includes="libgdx-freetypearm.so"/>
+			<!-- <fileset dir="../libs/linux32armel" includes="libgdx-freetypearmgnueabi.so"/> -->
+			<fileset dir="../libs/linux32armhf" includes="libgdx-freetypearmgnueabihf.so"/>
+		</jar>
+	</target>
+	
 	<target name="all" depends="compile-natives,pack-natives"/>
 </project>

@@ -30,13 +30,21 @@
 			<fileset dir="../libs/windows32" includes="gdx.dll"/>
 			<fileset dir="../libs/windows64" includes="gdx64.dll"/>
 			<fileset dir="../libs/linux32" includes="libgdx.so"/>
-			<fileset dir="../libs/linux32" includes="libgdxarm.so"/>
-			<fileset dir="../libs/linux32" includes="libgdxarmgnueabi.so"/>
-			<fileset dir="../libs/linux32" includes="libgdxarmgnueabihf.so"/>
+			<fileset dir="../libs/linux32arm" includes="libgdxarm.so"/>
+			<fileset dir="../libs/linux32armel" includes="libgdxarmgnueabi.so"/>
+			<fileset dir="../libs/linux32armhf" includes="libgdxarmgnueabihf.so"/>
 			<fileset dir="../libs/linux64" includes="libgdx64.so"/>
 
 		</jar>
 	</target>
 
-	<target name="all" depends="compile-natives,pack-natives"/>
+	<target name="update-natives">
+		<jar destfile="../libs/gdx-natives.jar" update="true">
+			<fileset dir="../libs/linux32arm" includes="libgdxarm.so"/>
+			<!-- <fileset dir="../libs/linux32armel" includes="libgdxarmgnueabi.so"/> -->
+			<fileset dir="../libs/linux32armhf" includes="libgdxarmgnueabihf.so"/>
+		</jar>
+	</target>
+
+		<target name="all" depends="compile-natives,pack-natives"/>
 </project>
