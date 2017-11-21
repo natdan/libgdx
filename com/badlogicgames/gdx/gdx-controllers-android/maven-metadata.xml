@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.badlogicgames.gdx</groupId>
+  <artifactId>gdx-controllers-android</artifactId>
+  <versioning>
+    <release>1.9.5.rpi</release>
+    <versions>
+      <version>1.9.5.rpi</version>
+    </versions>
+    <lastUpdated>20171121222423</lastUpdated>
+  </versioning>
+</metadata>
