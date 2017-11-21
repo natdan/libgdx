@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
   <groupId>com.badlogicgames.gdx</groupId>
-  <artifactId>gdx-jnigen</artifactId>
+  <artifactId>gdx</artifactId>
   <versioning>
     <release>1.9.5.rpi</release>
     <versions>
       <version>1.9.5.rpi</version>
     </versions>
-    <lastUpdated>20171121201427</lastUpdated>
+    <lastUpdated>20171121201444</lastUpdated>
   </versioning>
 </metadata>
