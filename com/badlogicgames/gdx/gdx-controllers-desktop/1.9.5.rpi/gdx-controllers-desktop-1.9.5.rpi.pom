@@ -8,14 +8,25 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>gdx-controllers</artifactId>
+  <artifactId>gdx-controllers-desktop</artifactId>
   <packaging>jar</packaging>
-  <name>libGDX Controllers</name>
+  <name>libGDX Controllers Desktop</name>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gdx</artifactId>
+      <version>${project.version}</version>      
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gdx-jnigen</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gdx-controllers</artifactId>
       <version>${project.version}</version>      
     </dependency>
   </dependencies>
