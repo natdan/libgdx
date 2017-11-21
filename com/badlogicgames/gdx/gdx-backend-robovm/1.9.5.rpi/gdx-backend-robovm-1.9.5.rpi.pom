@@ -8,34 +8,34 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>gdx-backend-android</artifactId>
+  <artifactId>gdx-backend-robovm</artifactId>
   <packaging>jar</packaging>
-  <name>libGDX Android Backend</name>
-  
+  <name>libGDX iOS RoboVM Backend</name>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gdx</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>com.google.android</groupId>
-      <artifactId>android</artifactId>
-      <version>${android.version}</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/libs/android-4.4.jar</systemPath>
-      <optional>true</optional>
-    </dependency>
-    
-    <dependency>
-	    <groupId>com.android.support</groupId>
-	    <artifactId>support-v4</artifactId>
-	    <version>19.0.1</version>
-	    <scope>system</scope>
-		<systemPath>${basedir}/libs/support-v4-19.0.1.jar</systemPath>
-		<optional>true</optional>
-	  </dependency>
+      
+      <dependency>
+          <groupId>com.mobidevelop.robovm</groupId>
+          <artifactId>robovm-cocoatouch</artifactId>
+          <version>${robovm.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>com.mobidevelop.robovm</groupId>
+          <artifactId>robovm-objc</artifactId>
+          <version>${robovm.version}</version>
+      </dependency>
+      
+      <dependency>
+          <groupId>com.mobidevelop.robovm</groupId>
+          <artifactId>robovm-rt</artifactId>
+          <version>${robovm.version}</version>
+      </dependency>
   </dependencies>
 
   <build>
