@@ -338,10 +338,23 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		return gl20;
 	}
 
+        @Override
+        public void setGL20 (GL20 gl20) {
+                Gdx.gl = gl20;
+                Gdx.gl20 = gl20;
+        }
+
 	@Override
 	public GL30 getGL30 () {
 		return gl30;
 	}
+
+        @Override
+        public void setGL30 (GL30 gl30) {
+                Gdx.gl = gl30;
+                Gdx.gl20 = gl30;
+                Gdx.gl30 = gl30;
+        }
 
 	@Override
 	public boolean isGL30Available () {
