@@ -3,10 +3,10 @@
   <groupId>com.badlogicgames.gdx</groupId>
   <artifactId>gdx-bullet-platform</artifactId>
   <versioning>
-    <release>1.9.5.rpi</release>
+    <release>1.9.7.rpi</release>
     <versions>
-      <version>1.9.5.rpi</version>
+      <version>1.9.7.rpi</version>
     </versions>
-    <lastUpdated>20171121222227</lastUpdated>
+    <lastUpdated>20171128194026</lastUpdated>
   </versioning>
 </metadata>
