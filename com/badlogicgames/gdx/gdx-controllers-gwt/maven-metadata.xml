@@ -3,10 +3,9 @@
   <groupId>com.badlogicgames.gdx</groupId>
   <artifactId>gdx-controllers-gwt</artifactId>
   <versioning>
-    <release>1.9.7.rpi</release>
     <versions>
-      <version>1.9.7.rpi</version>
+      <version>1.9.8.rpi-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20171128203656</lastUpdated>
+    <lastUpdated>20171129140114</lastUpdated>
   </versioning>
 </metadata>
