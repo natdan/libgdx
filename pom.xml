@@ -71,7 +71,6 @@
     <module>backends/gdx-backend-lwjgl</module>
     <module>backends/gdx-backend-jogamp</module>
     <module>backends/gdx-backend-lwjgl3</module>    
-    <module>backends/gdx-backend-jogamp</module>
     <module>backends/gdx-backends-gwt</module>
     <module>backends/gdx-backend-headless</module>
     <module>backends/gdx-backend-moe</module>
@@ -137,11 +136,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
         <version>2.3.1</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.5</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
