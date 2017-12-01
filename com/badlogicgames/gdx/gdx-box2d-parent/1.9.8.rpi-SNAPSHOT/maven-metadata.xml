@@ -5,15 +5,15 @@
   <version>1.9.8.rpi-SNAPSHOT</version>
   <versioning>
     <snapshot>
-      <timestamp>20171129.135524</timestamp>
+      <timestamp>20171201.094342</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
-    <lastUpdated>20171129135524</lastUpdated>
+    <lastUpdated>20171201094342</lastUpdated>
     <snapshotVersions>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.9.8.rpi-20171129.135524-1</value>
-        <updated>20171129135524</updated>
+        <value>1.9.8.rpi-20171201.094342-1</value>
+        <updated>20171201094342</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
