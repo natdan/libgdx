@@ -5,26 +5,26 @@
   <version>1.9.8.rpi-SNAPSHOT</version>
   <versioning>
     <snapshot>
-      <timestamp>20171129.135336</timestamp>
+      <timestamp>20171201.094154</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
-    <lastUpdated>20171129135336</lastUpdated>
+    <lastUpdated>20171201094154</lastUpdated>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171129.135336-1</value>
-        <updated>20171129135336</updated>
+        <value>1.9.8.rpi-20171201.094154-1</value>
+        <updated>20171201094154</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.9.8.rpi-20171129.135336-1</value>
-        <updated>20171129135336</updated>
+        <value>1.9.8.rpi-20171201.094154-1</value>
+        <updated>20171201094154</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171129.135336-1</value>
-        <updated>20171129135336</updated>
+        <value>1.9.8.rpi-20171201.094154-1</value>
+        <updated>20171201094154</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
