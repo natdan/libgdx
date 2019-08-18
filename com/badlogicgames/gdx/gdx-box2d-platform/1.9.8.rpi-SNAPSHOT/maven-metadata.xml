@@ -5,62 +5,62 @@
   <version>1.9.8.rpi-SNAPSHOT</version>
   <versioning>
     <snapshot>
-      <timestamp>20171201.094416</timestamp>
+      <timestamp>20190818.171029</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
-    <lastUpdated>20171201094416</lastUpdated>
+    <lastUpdated>20190818171029</lastUpdated>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-desktop</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-x86</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-x86_64</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-armeabi</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-armeabi-v7a</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-arm64-v8a</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>natives-ios</classifier>
         <extension>jar</extension>
-        <value>1.9.8.rpi-20171201.094416-1</value>
-        <updated>20171201094416</updated>
+        <value>1.9.8.rpi-20190818.171029-1</value>
+        <updated>20190818171029</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
