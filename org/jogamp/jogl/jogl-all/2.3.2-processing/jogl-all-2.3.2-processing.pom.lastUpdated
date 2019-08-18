@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sat Aug 17 10:58:19 BST 2019
+http\://jogamp.org/deployment/maven/.error=
+http\://jogamp.org/deployment/maven/.lastUpdated=1566035899430
+https\://repo.maven.apache.org/maven2/.lastUpdated=1566035899734
+https\://repo.maven.apache.org/maven2/.error=

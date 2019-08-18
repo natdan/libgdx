@@ -1,0 +1,12 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sat Aug 17 10:31:14 BST 2019
+gluegen-rt-2.3.2-processing-natives-macosx-universal.jar>=
+gluegen-rt-2.3.2-processing-natives-windows-i586.jar>=
+gluegen-rt-2.3.2-processing-natives-windows-amd64.jar>=
+gluegen-rt-2.3.2-processing-natives-linux\=amd64.jar>=
+gluegen-rt-2.3.2-processing-natives-linux-i586.jar>=
+gluegen-rt-2.3.2-processing.jar>=
+gluegen-rt-2.3.2-processing-natives-linux-aarch64.jar>=
+gluegen-rt-2.3.2-processing.pom>=
+gluegen-rt-2.3.2-processing-natives-linux-armv6hf.jar>=
+gluegen-rt-2.3.2-processing-natives-linux-amd64.jar>=
