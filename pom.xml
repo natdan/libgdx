@@ -25,7 +25,11 @@
           <id>jogamp</id>
           <url>http://jogamp.org/deployment/maven</url>
       </repository>
-  </repositories>
+      <repository>
+          <id>libgdx</id>
+          <url>https://raw.githubusercontent.com/natdan/libgdx/mvn-repo</url>
+      </repository>
+    </repositories>
   
   <licenses>
     <license>
