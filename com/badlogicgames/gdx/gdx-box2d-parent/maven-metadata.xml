@@ -3,9 +3,10 @@
   <groupId>com.badlogicgames.gdx</groupId>
   <artifactId>gdx-box2d-parent</artifactId>
   <versioning>
+    <release>1.9.8.rpi</release>
     <versions>
-      <version>1.9.8.rpi-SNAPSHOT</version>
+      <version>1.9.8.rpi</version>
     </versions>
-    <lastUpdated>20190818171011</lastUpdated>
+    <lastUpdated>20190821164028</lastUpdated>
   </versioning>
 </metadata>
