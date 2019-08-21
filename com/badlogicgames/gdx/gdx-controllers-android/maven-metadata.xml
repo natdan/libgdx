@@ -3,10 +3,10 @@
   <groupId>com.badlogicgames.gdx</groupId>
   <artifactId>gdx-controllers-android</artifactId>
   <versioning>
-    <release>1.9.8.rpi</release>
+    <release>1.9.9.rpi</release>
     <versions>
-      <version>1.9.8.rpi</version>
+      <version>1.9.9.rpi</version>
     </versions>
-    <lastUpdated>20190821164347</lastUpdated>
+    <lastUpdated>20190821184054</lastUpdated>
   </versioning>
 </metadata>
