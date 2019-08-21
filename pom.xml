@@ -62,6 +62,7 @@
     <lwjgl3.version>3.2.0</lwjgl3.version>
     <robovm.version>2.3.5</robovm.version>
     <moe.version>1.4.0</moe.version>
+    <github.global.server>github</github.global.server>
   </properties>
 
   <modules>
