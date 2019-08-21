@@ -110,6 +110,9 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 	boolean justTouched = false;
 	Set<Integer> keys = new HashSet<Integer>();
 	Set<Integer> pressedButtons = new HashSet<Integer>();
+	boolean keyJustPressed = false;
+	boolean[] justPressedKeys = new boolean[256];
+	boolean[] justPressedButtons = new boolean[5];
 	InputProcessor processor;
 	Component component;
 	boolean catched = false;
@@ -260,6 +263,11 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 	}
 
 	@Override
+	public int getMaxPointers () {
+		return 1;
+	}
+
+	@Override
 	public int getX () {
 		return touchX;
 	}
@@ -321,7 +329,18 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 	@Override
 	public void processEvents () {
 		synchronized (this) {
-			justTouched = false;
+			if (justTouched) {
+				justTouched = false;
+				for (int i = 0; i < justPressedButtons.length; i++) {
+					justPressedButtons[i] = false;
+				}
+			}
+			if (keyJustPressed) {
+				keyJustPressed = false;
+				for (int i = 0; i < justPressedKeys.length; i++) {
+					justPressedKeys[i] = false;
+				}
+			}
 
 			if (processor != null) {
 				InputProcessor processor = this.processor;
@@ -333,6 +352,8 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 					switch (e.type) {
 					case KeyEvent.KEY_DOWN:
 						processor.keyDown(e.keyCode);
+						keyJustPressed = true;
+						justPressedKeys[e.keyCode] = true;
 						break;
 					case KeyEvent.KEY_UP:
 						processor.keyUp(e.keyCode);
@@ -351,6 +372,7 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 					case TouchEvent.TOUCH_DOWN:
 						processor.touchDown(e.x, e.y, e.pointer, e.button);
 						justTouched = true;
+						justPressedButtons[e.button] = true;
 						break;
 					case TouchEvent.TOUCH_UP:
 						processor.touchUp(e.x, e.y, e.pointer, e.button);
@@ -694,6 +716,12 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 	}
 
 	@Override
+	public boolean isButtonJustPressed(int button) {
+		if(button < 0 || button >= justPressedButtons.length) return false;
+		return justPressedButtons[button];
+	}
+
+	@Override
 	public void vibrate (long[] pattern, int repeat) {
 	}
 
@@ -816,8 +844,13 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 
 	@Override
 	public boolean isKeyJustPressed(int key) {
-		// TODO Auto-generated method stub
-		return false;
+		if (key == Input.Keys.ANY_KEY) {
+			return keyJustPressed;
+		}
+		if (key < 0 || key > 255) {
+			return false;
+		}
+		return justPressedKeys[key];
 	}
 
 	@Override
@@ -827,6 +860,16 @@ public class JoglAwtInput implements JoglInput, MouseMotionListener, MouseListen
 
 	@Override
 	public boolean isCatchMenuKey () {
+		return false;
+	}
+
+	@Override
+	public void setCatchKey (int keycode, boolean catchKey) {
+
+	}
+
+	@Override
+	public boolean isCatchKey (int keycode) {
 		return false;
 	}
 
