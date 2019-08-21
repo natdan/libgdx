@@ -16,16 +16,17 @@
 
 package com.badlogic.gdx.graphics.g2d;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Arrays;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Arrays;
 
 public class ParticleEmitter {
 	static private final int UPDATE_SCALE = 1 << 0;
@@ -135,6 +136,7 @@ public class ParticleEmitter {
 		premultipliedAlpha = emitter.premultipliedAlpha;
 		cleansUpBlendFunction = emitter.cleansUpBlendFunction;
 		spriteMode = emitter.spriteMode;
+		setPosition(emitter.getX(),emitter.getY());
 	}
 
 	private void initialize () {
@@ -532,7 +534,7 @@ public class ParticleEmitter {
 				float radius2 = radiusX * radiusX;
 				while (true) {
 					float px = MathUtils.random(width) - radiusX;
-					float py = MathUtils.random(height) - radiusY;
+					float py = MathUtils.random(width) - radiusX;
 					if (px * px + py * py <= radius2) {
 						x += px;
 						y += py / scaleY;
@@ -1539,13 +1541,23 @@ public class ParticleEmitter {
 		public void load (BufferedReader reader) throws IOException {
 			super.load(reader);
 			// For backwards compatibility, independent property may not be defined
-			reader.mark(100);
+			if (reader.markSupported())
+				reader.mark(100);
 			String line = reader.readLine();
-			if (line == null) throw new IOException("Missing value: " + "independent");
+			if (line == null) throw new IOException("Missing value: independent");
 			if (line.contains("independent"))
 				independent = Boolean.parseBoolean(readString(line));
-			else
+			else if (reader.markSupported())
 				reader.reset();
+			else {
+				// @see java.io.BufferedReader#markSupported may return false in some platforms (such as GWT),
+				// in that case backwards commpatibility is not possible
+				String errorMessage = "The loaded particle effect descriptor file uses an old invalid format. " +
+						"Please download the latest version of the Particle Editor tool and recreate the file by" +
+						" loading and saving it again.";
+				Gdx.app.error("ParticleEmitter", errorMessage);
+				throw new IOException(errorMessage);
+			}
 		}
 
 		public void load (IndependentScaledNumericValue value) {

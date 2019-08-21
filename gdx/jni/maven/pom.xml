@@ -160,7 +160,6 @@
                                 <resource><directory>${basedir}/../../libs/linux32arm</directory></resource>
                                 <resource><directory>${basedir}/../../libs/linux32armhf</directory></resource>
                                 <resource><directory>${basedir}/../../libs/linux64</directory></resource>
-                                <resource><directory>${basedir}/../../libs/macosx32</directory></resource>
                                 <resource><directory>${basedir}/../../libs/macosx64</directory></resource>
                                 <resource><directory>${basedir}/../../libs/windows32</directory></resource>
                                 <resource><directory>${basedir}/../../libs/windows64</directory></resource>

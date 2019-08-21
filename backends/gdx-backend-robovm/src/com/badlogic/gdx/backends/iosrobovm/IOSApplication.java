@@ -157,7 +157,7 @@ public class IOSApplication implements Application {
 		Gdx.gl30 = graphics.gl30;
 		this.files = new IOSFiles();
 		this.audio = new IOSAudio(config);
-		this.net = new IOSNet(this);
+		this.net = new IOSNet(this, config);
 
 		Gdx.files = this.files;
 		Gdx.graphics = this.graphics;
@@ -176,6 +176,10 @@ public class IOSApplication implements Application {
 
 	protected IOSGraphics createGraphics(float scale) {
 		 return new IOSGraphics(scale, this, config, input, config.useGL30);
+	}
+
+	protected IOSGraphics.IOSUIViewController createUIViewController(IOSGraphics graphics) {
+		return new IOSGraphics.IOSUIViewController(this, graphics);
 	}
 
 	protected IOSInput createInput() {

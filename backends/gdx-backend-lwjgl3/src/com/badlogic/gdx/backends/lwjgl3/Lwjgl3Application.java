@@ -102,7 +102,7 @@ public class Lwjgl3Application implements Application {
 			this.audio = Gdx.audio = new MockAudio();
 		}
 		this.files = Gdx.files = new Lwjgl3Files();
-		this.net = Gdx.net = new Lwjgl3Net();
+		this.net = Gdx.net = new Lwjgl3Net(config);
 		this.clipboard = new Lwjgl3Clipboard();
 
 		Lwjgl3Window window = createWindow(config, listener, 0);
@@ -443,7 +443,7 @@ public class Lwjgl3Application implements Application {
 		long windowHandle = 0;
 		
 		if(config.fullscreenMode != null) {
-			// glfwWindowHint(GLFW.GLFW_REFRESH_RATE, config.fullscreenMode.refreshRate);
+			GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, config.fullscreenMode.refreshRate);
 			windowHandle = GLFW.glfwCreateWindow(config.fullscreenMode.width, config.fullscreenMode.height, config.title, config.fullscreenMode.getMonitor(), sharedContextWindow);
 		} else {
 			GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, config.windowDecorated? GLFW.GLFW_TRUE: GLFW.GLFW_FALSE);
@@ -461,6 +461,13 @@ public class Lwjgl3Application implements Application {
 				if (config.windowMaxHeight > -1) windowHeight = Math.min(windowHeight, config.windowMaxHeight);
 				GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 				GLFW.glfwSetWindowPos(windowHandle, vidMode.width() / 2 - windowWidth / 2, vidMode.height() / 2 - windowHeight / 2);
+			} else {
+				GLFW.glfwSetWindowPos(windowHandle, config.windowX, config.windowY);
+			}
+		} else if (config.windowMaximized) {
+			if (config.maximizedMonitor != null) {
+				GLFWVidMode vidMode = GLFW.glfwGetVideoMode(config.maximizedMonitor.monitorHandle);
+				GLFW.glfwSetWindowPos(windowHandle, vidMode.width() / 2 - config.windowWidth / 2, vidMode.height() / 2 - config.windowHeight / 2);
 			} else {
 				GLFW.glfwSetWindowPos(windowHandle, config.windowX, config.windowY);
 			}

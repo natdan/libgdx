@@ -30,7 +30,6 @@
 			<fileset dir="../libs/linux32armgnueabi" includes="libgdx-controller-desktopsarmel.so"/>
 			<fileset dir="../libs/linux32armgnueabihf" includes="libgdx-controller-desktopsarmhf.so"/>
 			<fileset dir="../libs/linux64" includes="libgdx-controllers-desktop64.so"/>
-			<fileset dir="../libs/macosx32" includes="libgdx-controllers-desktop.dylib"/>
 			<fileset dir="../libs/macosx64" includes="libgdx-controllers-desktop64.dylib"/>
 
 		</jar>

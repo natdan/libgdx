@@ -23,20 +23,20 @@ allprojects {
 
     buildscript {
         repositories {
-            mavenCentral()
-            jcenter()
-            maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
             google()
+            jcenter()
+            mavenCentral()
+            maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         }
     }
 
     repositories {
-        mavenCentral()
+        google()
         jcenter()
+        mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "http://jogamp.org/deployment/maven" }
         maven { url "https://raw.githubusercontent.com/natdan/libgdx/mvn-repo" }
-        google()
     }
 
 }
@@ -51,11 +51,11 @@ configure(subprojects - project(":tests:gdx-tests-android")) {
     }
 }
 
-task fetchNatives {
+ant.importBuild("fetch.xml") { antTargetName ->
+    "ant-task-" + antTargetName    
+}
+task fetchNatives(dependsOn: "ant-task-all"){
     doLast {
-        ant.importBuild "fetch.xml"
-        fetch.execute()
-        copy.execute()
     }
 }
 
