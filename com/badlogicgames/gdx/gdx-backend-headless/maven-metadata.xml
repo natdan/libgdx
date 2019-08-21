@@ -3,10 +3,9 @@
   <groupId>com.badlogicgames.gdx</groupId>
   <artifactId>gdx-backend-headless</artifactId>
   <versioning>
-    <release>1.9.9.rpi</release>
     <versions>
-      <version>1.9.9.rpi</version>
+      <version>1.9.11.rpi-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20190821183649</lastUpdated>
+    <lastUpdated>20190821214321</lastUpdated>
   </versioning>
 </metadata>
