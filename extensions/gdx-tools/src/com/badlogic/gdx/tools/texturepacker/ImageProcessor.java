@@ -43,29 +43,19 @@ public class ImageProcessor {
 	static private final BufferedImage emptyImage = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
 	static private Pattern indexPattern = Pattern.compile("(.+)_(\\d+)$");
 
-	private String rootPath;
 	private final Settings settings;
 	private final HashMap<String, Rect> crcs = new HashMap();
 	private final Array<Rect> rects = new Array();
 	private float scale = 1;
 	private Resampling resampling = Resampling.bicubic;
 
-	/** @param rootDir Used to strip the root directory prefix from image file names, can be null. */
-	public ImageProcessor (File rootDir, Settings settings) {
-		this.settings = settings;
-
-		if (rootDir != null) {
-			rootPath = rootDir.getAbsolutePath().replace('\\', '/');
-			if (!rootPath.endsWith("/")) rootPath += "/";
-		}
-	}
-
 	public ImageProcessor (Settings settings) {
-		this(null, settings);
+		this.settings = settings;
 	}
 
-	/** The image won't be kept in-memory during packing if {@link Settings#limitMemory} is true. */
-	public void addImage (File file) {
+	/** The image won't be kept in-memory during packing if {@link Settings#limitMemory} is true.
+	 * @param rootPath Used to strip the root directory prefix from image file names, can be null. */
+	public void addImage (File file, String rootPath) {
 		BufferedImage image;
 		try {
 			image = ImageIO.read(file);
@@ -91,7 +81,7 @@ public class ImageProcessor {
 	}
 
 	/** The image will be kept in-memory during packing.
-	 * @see #addImage(File) */
+	 * @see #addImage(File, String) */
 	public Rect addImage (BufferedImage image, String name) {
 		Rect rect = processImage(image, name);
 
@@ -104,7 +94,11 @@ public class ImageProcessor {
 			String crc = hash(rect.getImage(this));
 			Rect existing = crcs.get(crc);
 			if (existing != null) {
-				if (!settings.silent) System.out.println(rect.name + " (alias of " + existing.name + ")");
+				if (!settings.silent) {
+					String rectName = rect.name + (rect.index != -1 ? "_" + rect.index : "");
+					String existingName = existing.name + (existing.index != -1 ? "_" + existing.index : "");
+					System.out.println(rectName + " (alias of " + existingName + ")");
+				}
 				existing.aliases.add(new Alias(rect));
 				return null;
 			}

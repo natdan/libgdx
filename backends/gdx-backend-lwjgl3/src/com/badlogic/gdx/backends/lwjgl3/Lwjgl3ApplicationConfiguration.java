@@ -51,8 +51,8 @@ public class Lwjgl3ApplicationConfiguration extends Lwjgl3WindowConfiguration {
 	int r = 8, g = 8, b = 8, a = 8;
 	int depth = 16, stencil = 0;
 	int samples = 0;
+	boolean transparentFramebuffer;
 
-	boolean vSyncEnabled = true;
 	int idleFPS = 60;
 
 	String preferencesDirectory = ".prefs/";
@@ -85,7 +85,8 @@ public class Lwjgl3ApplicationConfiguration extends Lwjgl3WindowConfiguration {
 		depth = config.depth;
 		stencil = config.stencil;
 		samples = config.samples;
-		vSyncEnabled = config.vSyncEnabled;
+		transparentFramebuffer = config.transparentFramebuffer;
+		idleFPS = config.idleFPS;
 		preferencesDirectory = config.preferencesDirectory;
 		preferencesFileType = config.preferencesFileType;
 		hdpiMode = config.hdpiMode;
@@ -181,14 +182,16 @@ public class Lwjgl3ApplicationConfiguration extends Lwjgl3WindowConfiguration {
 	}
 
 	/**
-	 * Sets whether to use vsync. This setting can be changed anytime at runtime
-	 * via {@link Graphics#setVSync(boolean)}.
+	 * Set transparent window hint
+	 * @deprecated Results may vary on different OS and GPUs. See https://github.com/glfw/glfw/issues/1237
+	 * @param transparentFramebuffer
 	 */
-	public void useVsync(boolean vsync) {
-		this.vSyncEnabled = vsync;
+	@Deprecated
+	public void setTransparentFramebuffer (boolean transparentFramebuffer) {
+		this.transparentFramebuffer = transparentFramebuffer;
 	}
-	
-	/**Sets the polling rate during idle time in non-continuous rendering mode. Must be positive. 
+
+	/**Sets the polling rate during idle time in non-continuous rendering mode. Must be positive.
 	 * Default is 60. */
 	public void setIdleFPS (int fps) {
 		this.idleFPS = fps;
