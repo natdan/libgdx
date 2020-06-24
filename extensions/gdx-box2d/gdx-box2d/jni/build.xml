@@ -7,6 +7,7 @@
 		<ant antfile="build-linux32-armgnueabi.xml" target="clean"/>
 		<ant antfile="build-linux32-armgnueabihf.xml" target="clean"/>
 		<ant antfile="build-linux64.xml" target="clean"/>
+		<ant antfile="build-linux-aarch64.xml" target="clean"/>
 		<ant antfile="build-android32.xml" target="clean"/>
 
 	</target>
@@ -19,6 +20,7 @@
 		<ant antfile="build-linux32-armgnueabi.xml"/>
 		<ant antfile="build-linux32-armgnueabihf.xml"/>
 		<ant antfile="build-linux64.xml"/>
+		<ant antfile="build-linux-aarch64.xml"/>
 		<ant antfile="build-android32.xml"/>
 
 	</target>
@@ -32,6 +34,7 @@
 			<fileset dir="../libs/linux32-armgnueabi" includes="libgdx-box2darmel.so"/>
 			<fileset dir="../libs/linux32-armgnueabihf" includes="libgdx-box2darmhf.so"/>
 			<fileset dir="../libs/linux64" includes="libgdx-box2d64.so"/>
+			<fileset dir="../libs/linux-aarch64" includes="libgdx-box2daarch64.so"/>
 			<fileset dir="../libs/macosx64" includes="libgdx-box2d64.dylib"/>
 
 		</jar>
@@ -42,6 +45,7 @@
 			<fileset dir="../libs/linux32arm" includes="libgdx-box2darm.so"/>
 			<!-- <fileset dir="../libs/linux32armel" includes="libgdx-box2darmgnueabi.so"/> -->
 			<fileset dir="../libs/linux32armhf" includes="libgdx-box2darmgnueabihf.so"/>
+			<fileset dir="../libs/linux-aarch64" includes="libgdx-box2daarch64.so"/>
 		</jar>
 	</target>
 	

@@ -160,6 +160,7 @@
                                 <resource><directory>${basedir}/../../libs/linux32arm</directory></resource>
                                 <resource><directory>${basedir}/../../libs/linux32armhf</directory></resource>
                                 <resource><directory>${basedir}/../../libs/linux64</directory></resource>
+                                <resource><directory>${basedir}/../../libs/linux-aarch64</directory></resource>
                                 <resource><directory>${basedir}/../../libs/macosx64</directory></resource>
                                 <resource><directory>${basedir}/../../libs/windows32</directory></resource>
                                 <resource><directory>${basedir}/../../libs/windows64</directory></resource>
@@ -225,6 +226,20 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>copy-local-aarch64</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource><directory>${basedir}/../../libs/linux-aarch64</directory></resource>
+                            </resources>
+                            <outputDirectory>${basedir}/target/aarch64</outputDirectory>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-local-arm64-v8a</id>
                         <phase>prepare-package</phase>
                         <goals>
@@ -267,6 +282,7 @@
                         <descriptor>armeabi.xml</descriptor>
                         <descriptor>armeabi-v7a.xml</descriptor>
                         <descriptor>arm64-v8a.xml</descriptor>
+                        <descriptor>aarch64.xml</descriptor>
                         <descriptor>ios.xml</descriptor>
                     </descriptors>
                 </configuration>
