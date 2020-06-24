@@ -397,4 +397,25 @@ public abstract class JoglGraphicsBase implements Graphics, GLEventListener {
 		String rendererString = GLContext.getCurrentGL().glGetString(GL.GL_RENDERER);
 		glVersion = new GLVersion(Application.ApplicationType.Desktop, versionString, vendorString, rendererString);
 	}
+	
+	@Override
+	public int getSafeInsetLeft() {
+		return 0;
+	}
+
+	@Override
+	public int getSafeInsetTop() {
+		return 0;
+	}
+
+	@Override
+	public int getSafeInsetBottom() {
+		return 0;
+	}
+
+	@Override
+	public int getSafeInsetRight() {
+		return 0;
+	}
+
 }
