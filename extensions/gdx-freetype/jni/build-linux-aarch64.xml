@@ -19,7 +19,7 @@
 	<property name="gcc-opts" value="-c -Wall -O2 -fmessage-length=0 -fPIC -std=c99 -DFT2_BUILD_LIBRARY"/>
 	<fileset id="gcc-files" dir="./">
 		<exclude name="target/"/>
-				<include name="memcpy_wrap.c"/>
+		<include name="memcpy_wrap.c"/>
 		<include name="freetype-2.9.1/src/base/ftsystem.c"/>
 		<include name="freetype-2.9.1/src/base/ftinit.c"/>
 		<include name="freetype-2.9.1/src/base/ftdebug.c"/>
@@ -32,7 +32,6 @@
 		<include name="freetype-2.9.1/src/base/ftfstype.c"/>
 		<include name="freetype-2.9.1/src/base/ftgasp.c"/>
 		<include name="freetype-2.9.1/src/base/ftgxval.c"/>
-		<include name="freetype-2.9.1/src/base/ftlcdfil.c"/>
 		<include name="freetype-2.9.1/src/base/ftmm.c"/>
 		<include name="freetype-2.9.1/src/base/ftotval.c"/>
 		<include name="freetype-2.9.1/src/base/ftpatent.c"/>
